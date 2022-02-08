@@ -9,25 +9,6 @@ import java.util.*;
 import static java.lang.Integer.parseInt;
 public class Main {
 
-    private static final String shortArg = "-";
-    private static final String longArg = "--";
-    private static final String shortPort = shortArg + "p";
-    private static final String port = longArg + "port";
-    private static final String shortBacklog = shortArg + "B";
-    private static final String backlog = longArg + "Backlog";
-    private static final String shortURI = shortArg + "U";
-    private static final String URI = longArg + "URI";
-    private static final String shortAction = shortArg + "a";
-    private static final String action = longArg + "action";
-    private static final String shortLog = shortArg + "l";
-    private static final String log = longArg + "log";
-    private static final String shortBash = shortArg + "b";
-    private static final String bash = longArg + "bash";
-    private static final String shortDirectory = shortArg + "d";
-    private static final String directory = longArg + "directory";
-    private static final String shortStop = shortArg + "s";
-    private static final String stop = longArg + "stop";
-
     public static final String LOG_LEVEL_MAIN = "MAIN";
     public static final String LOG_LEVEL_HANDLER = "HANDLER";
     public static final String LOG_LEVEL_EXTERNAL = "EXTERNAL";
@@ -55,7 +36,7 @@ public class Main {
                 for(int i = 0; i < args.length - 1; i++) {
                     ps.println(args[i]);
                 }
-                ps.print(args[args.length-1]);  //no trailing new line.
+                if(args.length > 0) ps.print(args[args.length-1]);  //no trailing new line.
                 ps.close();
                 logn(LOG_LEVEL_MAIN, "updating context");
                 while(workFile.exists()) {
@@ -106,7 +87,7 @@ public class Main {
 
     static void shutdown(File dir) {
         log(LOG_LEVEL_MAIN, "shutting down.");
-        server.stop(5000);
+        server.stop(5);
         log(LOG_LEVEL_MAIN, "server down.");
         for(File f : dir.listFiles()) f.delete();
         dir.delete();
@@ -142,10 +123,31 @@ public class Main {
         log(LOG_LEVEL_MAIN, "server started.");
     }
 
+    private static final String shortArg = "-";
+    private static final String longArg = "--";
+    private static final String shortPort = shortArg + "p";
+    private static final String port = longArg + "port";
+    private static final String shortBacklog = shortArg + "B";
+    private static final String backlog = longArg + "Backlog";
+    private static final String shortURI = shortArg + "U";
+    private static final String URI = longArg + "URI";
+    private static final String shortAction = shortArg + "a";
+    private static final String action = longArg + "action";
+    private static final String shortLog = shortArg + "l";
+    private static final String log = longArg + "log";
+    private static final String shortBash = shortArg + "b";
+    private static final String bash = longArg + "bash";
+    private static final String shortDirectory = shortArg + "d";
+    private static final String directory = longArg + "directory";
+    private static final String shortStop = shortArg + "s";
+    private static final String stop = longArg + "stop";
+
     public static HashMap<String, String> parseArgs(String[] args) {
         HashMap<String, String> answer = new HashMap<String, String>();
         for(int i = 0; i < args.length; i++) {
-            if(args[i].equals(shortStop) || args[i].equals(stop)) {
+            if (args[i].equals(shortDirectory) || args[i].equals(directory)) {
+                answer.put(directory, args[++i]);
+            } else if(args[i].equals(shortStop) || args[i].equals(stop)) {
                 answer.put(stop, "true");
             } else if(args[i].equals(shortBash) || args[i].equals(bash)) {
                 answer.put(bash, args[++i]);
